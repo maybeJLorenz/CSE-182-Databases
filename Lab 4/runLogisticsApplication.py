@@ -30,13 +30,14 @@ def countOrdersFromCenter(conn, centerCode: str):
         
         if result is None:
             return -1
-        
-
+            
         cursor.execute(
             """
-            SELECT 1
-            FROM DistributionCenter d
-            WHERE d.centerCode = %s
+            SELECT COUNT(s.orderID)
+            FROM ShippingOrder s, FreightRoute f
+            WHERE 
+                s.routeID = f.routeID
+                AND f.originCenter = %s
             """,
             (centerCode,)
         )
@@ -114,3 +115,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
+
